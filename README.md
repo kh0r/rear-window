@@ -1,5 +1,5 @@
 # Rear Window
-Outsourcing the suspicious neighbor to machines
+Outsourcing the paranoid neighbor to machines
 
 ## Description
 One machine (let's name him Jeff) sits at the window and takes pictures.
@@ -17,11 +17,11 @@ The webserver analyses the picture with [Google's Tensorflow](https://www.tensor
 ## Requirements
 
 ### Photo collection - Jeff
--) Raspberry Pi or similar device
--) cheap USB-webcam
+- Raspberry Pi or similar device
+- cheap USB-webcam
 
 ### Image processing and publishing - Lisa
--) a webserver (Let's name her Lisa) for processing
+- a webserver (Let's name her Lisa) for processing
 
 ## Configuration
 
