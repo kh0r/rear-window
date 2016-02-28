@@ -1,0 +1,7 @@
+---
+- name: Deploy the webcam application.
+  become: True
+  hosts: jeff
+  remote_user: pi
+  roles:
+    - { role: jeff }

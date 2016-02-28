@@ -1,0 +1,26 @@
+---
+
+- include: wifi.yml
+  when: wifi_name != ""
+
+- name: Install webcam package
+  apt: name=fswebcam state=present
+
+- name: Install Python Image Library
+  pip: name=Pillow version=2.6.1
+
+- name: Install image-retriever script
+  template: src=image-retriever.py.j2 dest=/usr/local/bin/image-retriever.py owner=pi mode=0744
+
+- name: Install image-retriever service
+  copy: src=jeff-service.conf dest=/etc/init/jeff.conf
+
+- name: Install upstart
+  apt: name=upstart
+
+- name: Restart Raspberry
+  shell: sleep 2 && shutdown -r now "Ansible updates triggered"
+  async: 1
+  poll: 0
+  sudo: true
+  ignore_errors: true

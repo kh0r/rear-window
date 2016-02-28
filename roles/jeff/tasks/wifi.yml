@@ -1,0 +1,7 @@
+---
+
+- name: Copy wifi config
+  template: src=wlan0.cfg.j2 dest=/etc/network/interfaces.d/wlan0.cfg
+
+- name: Enable wifi
+  lineinfile: dest=/etc/network/interfaces line="source /etc/network/interfaces.d/wlan0.cfg"

@@ -1,0 +1,64 @@
+#!/usr/bin/env python
+
+from time import sleep
+from PIL import Image
+from itertools import izip
+import datetime
+import os
+import glob
+
+def image_diff(image1, image2):
+    i1 = Image.open(image1)
+    i2 = Image.open(image2)
+    assert i1.mode == i2.mode, "Different kinds of images."
+    assert i1.size == i2.size, "Different sizes."
+
+    pairs = izip(i1.getdata(), i2.getdata())
+    if len(i1.getbands()) == 1:
+    # for gray-scale jpegs
+        diff = sum(abs(p1-p2) for p1,p2 in pairs)
+    else:
+        diff = sum(abs(c1-c2) for p1,p2 in pairs for c1,c2 in zip(p1,p2))
+
+    ncomponents = i1.size[0] * i1.size[1] * 3
+    return (diff / 255.0 * 100) / ncomponents
+
+def take_picture(storage_path):
+    if not os.path.exists(storage_path):
+        os.makedirs(storage_path)
+
+    filename = storage_path+datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")+'.jpg'
+
+    os.system('fswebcam -r 640x480 --no-banner '+filename+' > /dev/null 2>&1')
+
+    return filename
+
+
+picturefolder = "/tmp/rear_window/"
+# take one initial picture
+take_picture(picturefolder)
+
+while True:
+
+    # delete all but last images
+    images = os.listdir(picturefolder)
+    images.sort()
+    for f in images[:-1]:
+        os.unlink(picturefolder+f)
+
+    # find last picture
+    image1 = max(glob.iglob(picturefolder+'*.jpg'), key=os.path.getctime)
+    # take new picture
+    image2 = take_picture(picturefolder)
+
+    # calculate the relative difference
+    diff = image_diff(image1, image2)
+
+    print(diff)
+    if diff > {{ required_picture_difference }}:
+        print('found something')
+
+
+    # wait a little before taking the next image
+    sleep(5)
+done
